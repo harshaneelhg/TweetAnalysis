@@ -1,0 +1,12 @@
+{
+  "name": "node-api",
+  "main": "server.js",
+  "dependencies": {
+    "aws-sdk": "^2.4.10",
+    "body-parser": "~1.0.1",
+    "express": "~4.0.0",
+    "express-session": "^1.14.0",
+    "mongodb": "^2.2.4",
+    "mongoose": "~3.6.13"
+  }
+}
