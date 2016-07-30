@@ -1,3 +1,5 @@
 /keys
 /Data
 ./npm-debug.log
+./.DS_Store
+/Client/TwitterData
