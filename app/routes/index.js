@@ -23,6 +23,9 @@ router.post('/login', function(req,res){
   var username = req.body.username;
   var password = req.body.password;
 
+  if(typeof username == 'undefined' ||  typeof password == 'undefined')
+    return res.status(400).send({message:'Invalid request parameters'});
+
   if(password==''){
     return res.status(400).send({message:'Invalid Credentials. Password is empty'});
   }
@@ -42,6 +45,9 @@ router.post('/login', function(req,res){
 router.post('/register', function(req, res){
   var username = req.body.username;
   var password = req.body.password;
+
+  if(typeof username == 'undefined' ||  typeof password == 'undefined')
+    return res.status(400).send({message:'Invalid request parameters'});
 
   User.findOne({username: username}, function(err,user){
     if(err){
@@ -75,13 +81,16 @@ router.post('/tweet', function(req,res){
       return res.status(500).send({message: 'Internal server error. Check back in later.'});
     }
     if(!user){
-        return res.status(400).send({message:'Invalid Username. Cannot add tweet for invalid user.', user:savedUser});
+        return res.status(400).send({message:'Invalid Username. Cannot add tweet for invalid user.'});
     }
     else{
       var tweetText = req.body.tweetText;
       var timestamp =req.body.timestamp;
       var hashtags = modules.getHashtags(tweetText);
       var mentions = modules.getMentions(tweetText);
+
+      if(typeof username == 'undefined' ||  typeof tweetText == 'undefined' || typeof timestamp == 'undefined')
+        return res.status(400).send({message:'Invalid request parameters'});
 
       var newTweet = new Tweet();
       newTweet.username = username;
@@ -104,6 +113,9 @@ router.post('/tweet', function(req,res){
 router.post('/findTweetsByHashtag',function(req,res){
   var queryTag = req.body.queryTag
 
+  if(typeof queryTag == 'undefined')
+    return res.status(400).send({message:'Invalid request parameters'});
+
   Tweet.find({ hashtags:{ $in:[queryTag] } }, function(err,foundTweets){
     if(err){
       console.log(err);
@@ -121,7 +133,10 @@ router.post('/findTweetsByHashtag',function(req,res){
 router.post('/findTweetsByMentions',function(req,res){
   var queryMention = req.body.queryMention
 
-  Tweet.find({ hashtags:{ $in:[queryMention] } }, function(err,foundTweets){
+  if(typeof queryMention == 'undefined')
+    return res.status(400).send({message:'Invalid request parameters'});
+
+  Tweet.find({ mentions:{ $in:[queryMention] } }, function(err,foundTweets){
     if(err){
       console.log(err);
       return res.status(500).send({message: 'Internal server error. Check back in later.'});
