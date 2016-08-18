@@ -7,7 +7,7 @@ var mongoose   = require('mongoose');
 var assert     = require('assert');
 var modules    = require('./modules');
 
-mongoose.connect('mongodb://localhost:8081/TweetAnalysis',function(err){
+mongoose.connect('mongodb://localhost:8081/TweetAnalysis',{server:{poolSize:25}},function(err){
   if(err)
     console.log(err);
   else
