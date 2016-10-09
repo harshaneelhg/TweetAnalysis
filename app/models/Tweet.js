@@ -8,5 +8,5 @@ var tweetSchema = new mongoose.Schema({
     timestamp: {type: String}
 });
 
-var Tweet = mongoose.model('tweetModel', tweetSchema);
+var Tweet = mongoose.model('Tweet', tweetSchema);
 module.exports = Tweet;
