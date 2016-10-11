@@ -7,7 +7,7 @@ var mongoose   = require('mongoose');
 var assert     = require('assert');
 var modules    = require('./modules');
 
-mongoose.connect('mongodb://192.168.56.101:27020/TwitterDB',{server:{poolSize:50}},function(err){
+mongoose.connect('mongodb://192.168.56.101:27020/TwitterDB',{server:{poolSize:25}},function(err){
   if(err)
     console.log(err);
   else
