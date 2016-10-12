@@ -7,6 +7,10 @@ var mongoose   = require('mongoose');
 var assert     = require('assert');
 var modules    = require('./modules');
 
+// Variables for stress testing.
+var requestCount = 0;
+var testOn = false;
+
 mongoose.connect('mongodb://192.168.56.101:27020/TwitterDB',{server:{poolSize:50}},function(err){
   if(err)
     console.log(err);
@@ -20,6 +24,9 @@ router.get('/', function(req, res) {
 
 // Login functionality.
 router.post('/login', function(req,res){
+  if(testOn){
+    requestCount += 1;
+  }
   var username = req.body.username;
   var password = req.body.password;
 
@@ -43,6 +50,9 @@ router.post('/login', function(req,res){
 
 // Register new user.
 router.post('/register', function(req, res){
+  if(testOn){
+    requestCount += 1;
+  }
   var username = req.body.username;
   var password = req.body.password;
 
@@ -73,6 +83,9 @@ router.post('/register', function(req, res){
 
 // Obtain tweets by a user.
 router.post('/tweet', function(req,res){
+  if(testOn){
+    requestCount += 1;
+  }
   var username = req.body.username;
 
   User.findOne({username: username}, function(err,user){
@@ -111,6 +124,9 @@ router.post('/tweet', function(req,res){
 
 // Find tweets by hashtags.
 router.post('/findTweetsByHashtag',function(req,res){
+  if(testOn){
+    requestCount += 1;
+  }
   var queryTag = req.body.queryTag
 
   if(typeof queryTag == 'undefined')
@@ -131,6 +147,9 @@ router.post('/findTweetsByHashtag',function(req,res){
 
 // Find tweets by mentions
 router.post('/findTweetsByMentions',function(req,res){
+  if(testOn){
+    requestCount += 1;
+  }
   var queryMention = req.body.queryMention
 
   if(typeof queryMention == 'undefined')
@@ -147,6 +166,23 @@ router.post('/findTweetsByMentions',function(req,res){
       return res.status(200).send({message: 'Tweets found.', query: queryMention, tweets:foundTweets});
   });
 
+});
+
+// Notify start of the test
+router.get('/startStressTest'function(req,res){
+  if(testOn){
+    return res.status(400).send({message:'Some other test is already on. Try again in sometime.'});
+  }
+  testOn = true;
+  requestCount = 0;
+  return res.status(200).send({message:'Setup successful. Start test.', status:'OK'});
+});
+
+// End stress test and get results
+router.get('/endStressTest', function(req,res){
+  testOn = false;
+  console.log("requestCount= "+requestCount);
+  return res.status(200).send({message:"Test successful.", requestCount:requestCount});
 });
 
 module.exports = router;
