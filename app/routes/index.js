@@ -169,7 +169,7 @@ router.post('/findTweetsByMentions',function(req,res){
 });
 
 // Notify start of the test
-router.get('/startStressTest'function(req,res){
+router.post('/startStressTest'function(req,res){
   if(testOn){
     return res.status(400).send({message:'Some other test is already on. Try again in sometime.'});
   }
@@ -179,7 +179,7 @@ router.get('/startStressTest'function(req,res){
 });
 
 // End stress test and get results
-router.get('/endStressTest', function(req,res){
+router.post('/endStressTest', function(req,res){
   testOn = false;
   console.log("requestCount= "+requestCount);
   return res.status(200).send({message:"Test successful.", requestCount:requestCount});
