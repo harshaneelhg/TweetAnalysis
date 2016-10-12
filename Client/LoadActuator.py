@@ -35,9 +35,9 @@ print current_milli_time(), type(current_milli_time())
 print "Loading sample data..."
 rand_part_num = random.randint(1,2)
 
-tweet_data = pd.read_csv('./TwitterData/tweets_part%d.csv'%rand_part_num)
+tweet_data = pd.read_csv('./TwitterData/tweets_part1.csv')
 
-base_url = 'http://localhost:8080/api/'
+base_url = 'http://192.168.56.101:8080/api/'
 req_types = ['login/','register/','tweet/','findTweetsByHashtag/','findTweetsByMentions/']
 
 hashtags = getHashtags(tweet_data['tweet'])
