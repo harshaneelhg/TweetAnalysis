@@ -11,7 +11,7 @@ var modules    = require('./modules');
 var requestCount = 0;
 var testOn = false;
 
-mongoose.connect('mongodb://192.168.56.101:27020/TwitterDB',{server:{poolSize:50}},function(err){
+mongoose.connect('mongodb://192.168.56.101:27020/TwitterDB',{server:{poolSize:20}},function(err){
   if(err)
     console.log(err);
   else
@@ -24,9 +24,6 @@ router.get('/', function(req, res) {
 
 // Login functionality.
 router.post('/login', function(req,res){
-  if(testOn){
-    requestCount += 1;
-  }
   var username = req.body.username;
   var password = req.body.password;
 
@@ -37,12 +34,12 @@ router.post('/login', function(req,res){
     return res.status(400).send({message:'Invalid Credentials. Password is empty'});
   }
   User.findOne({username: username, password: password}, function(err,user){
+	if(!user){
+		  return res.status(404).send({message: 'Invalid credentials. User not found.'});
+    }
     if(err){
       console.log(err);
       return res.status(500).send({message: 'Internal server error. Check back in later.'});
-    }
-    if(!user){
-      return res.status(404).send({message: 'Invalid credentials. User not found.'});
     }
     return res.status(200).send({message: 'Login Successful.', user:user});
   });
@@ -181,7 +178,6 @@ router.post('/startStressTest', function(req,res){
 // End stress test and get results
 router.post('/endStressTest', function(req,res){
   testOn = false;
-  console.log("requestCount= "+requestCount);
   return res.status(200).send({message:"Test successful.", requestCount:requestCount});
 });
 
